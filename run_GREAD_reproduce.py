@@ -17,11 +17,11 @@ for dataset in dataset_list:
     data = data[:, valids]
     label = d['y']
     nominals = d['nominals'][valids]
-    # if nominals.sum() == 0 or np.logical_not(nominals).sum() == 0:
-    n_nom = nominals.sum()
-    if n*n*4*4/1024/1024/1024 > 5:
-        print(f'\t数据集太大，跳过……')
+
+
+    if n*n*4*4/1024/1024/1024 > 23:
         continue
+
     print("{}\t\tshape:{}\t# Outlier:{}\t# Nominals:{}".format(dataset[:-4], (n, m), label.sum(),nominals.sum()))
 
     paras = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
@@ -50,7 +50,7 @@ for dataset in dataset_list:
 
         print(f'\t\tCounted:{count1}/{count2}')
         del model
-    # break
+
 
     # Average score on 24 datasets: AUC=0.912, PR=0.597
 

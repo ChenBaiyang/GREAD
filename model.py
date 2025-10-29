@@ -26,11 +26,10 @@ def relation_matrix_torch(vec, p=0.7):
     dist_rel_mat = torch.cdist(vec, vec, p=1).float()
     if p < -0.1:
         return dist_rel_mat.lt_(1e-6) # equal to: (dist_rel_mat < 1e-6).float()
-    # delta = torch.quantile(dist_rel_mat.view(-1), p)
+
     n = vec.shape[0]
-    k = int(p * n * n)  # 第 k 小的值对应 p 分位数
-    # delta = (dist_rel_mat.view(-1).kthvalue(k).values * 1000).round() / 1000
-    delta = dist_rel_mat.view(-1).kthvalue(k).values
+    k = int(p * n * n)  # k-th minimum value = p-th percentile
+    delta = dist_rel_mat.view(-1).kthvalue(k).values # equal to: torch.quantile(dist_rel_mat.view(-1), p)
 
     dist_rel_mat.mul_(-1).add_(1)
     dist_rel_mat.masked_fill_(dist_rel_mat < 1 - delta, 0)
@@ -120,8 +119,7 @@ class GREAD(object):
                 if self.nominals[bin]:
                     dist_rel_mat.gt_(1e-5)
                 else:
-                    # delta = torch.quantile(dist_rel_mat.view(-1), self.p)
-                    k = int(self.p * n * n)  # 第 k 小的值对应 p 分位数
+                    k = int(self.p * n * n)  # k-th minimum value = p-th percentile
                     delta = dist_rel_mat.view(-1).kthvalue(k).values
                     dist_rel_mat.masked_fill_(dist_rel_mat > delta, 1)
             else:
@@ -133,8 +131,7 @@ class GREAD(object):
                         temp_i.gt_(1e-5)
                     dist_rel_mat += temp_i
                 dist_rel_mat /= len(bin)
-                # delta = torch.quantile(dist_rel_mat.view(-1), self.p)
-                k = int(self.p * n * n)  # 第 k 小的值对应 p 分位数
+                k = int(self.p * n * n)  # k-th minimum value = p-th percentile
                 delta = dist_rel_mat.view(-1).kthvalue(k).values
                 dist_rel_mat.masked_fill_(dist_rel_mat > delta, 1)
 

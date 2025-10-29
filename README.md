@@ -32,9 +32,8 @@ We collect 24 real-world datasets from various fields, including healthcare, ima
 |  24 |  Waveform   |  3,443   |     21      |       0       |    21     |   100    |  Numerical  |
 
 ## Environment
-* numpy=1.23
 * python=3.8
-* pytorch=1.12
+* pytorch=1.13
 * scikit-learn=1.2
 
 ## Acknowledgements
